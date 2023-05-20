@@ -6,12 +6,12 @@ pipeline {
 		booleanParam(name: 'CLEAN', defaultValue: false, description: '')
     }
 	environment {
+		DOCKERNAME = "peerhuang/webapp6"
+		DOCKERFILENAME = "Dockerfile"
 		PROJECT = "WebApp6/WebApp6.csproj"
 		DLL = "WebApp6.dll"
-		DOCKERNAME = "peerhuang/webapp6"
 		BASE = "mcr.microsoft.com/dotnet/aspnet:6.0"
 		PORT = ""
-		DOCKERFILENAME = "Dockerfile"
 	}
     stages {
         stage('dotnet build') {
