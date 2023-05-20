@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp6", "WebApp6\WebApp6.csproj", "{8BDE6FBE-CA8E-487E-A869-BB259E4399AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp6", "WebApp6\WebApp6.csproj", "{8BDE6FBE-CA8E-487E-A869-BB259E4399AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{13CD6A66-AC49-4D14-A65E-D18792B60B47}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		Jenkinsfile = Jenkinsfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
