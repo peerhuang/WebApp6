@@ -10,11 +10,14 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI();
+var swaggerForwarding = (HttpContext context) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    context.Response.Redirect("swagger");
+};
+app.MapGet("/", swaggerForwarding);
+app.MapGet("index.html", swaggerForwarding);
 
 app.UseHttpsRedirection();
 
