@@ -52,7 +52,7 @@ pipeline {
 									fi
 								fi
 								#build image
-								docker build -f $Dockerfile -t $dockerWithTag --pull=true publish
+								docker build -f $Dockerfile -t $dockerWithTag --pull=true .
 								#push image
 								if [ "$PUSH" != 'false' ];then
 									docker push $dockerWithTag
