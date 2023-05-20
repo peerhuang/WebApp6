@@ -9,7 +9,6 @@ pipeline {
 		PROJECT = "WebApp6/WebApp6.csproj"
 		DLL = "WebApp6.dll"
 		DOCKERNAME = "peerhuang/webapp6"
-		BASE = "mcr.microsoft.com/dotnet/aspnet:6.0"
 		PORT = "80"
 	}
     stages {
@@ -45,23 +44,6 @@ pipeline {
 								dockerWithTag=$dockerWithoutTag:`date +%Y`
 							fi
                             if [ -n "$dockerWithoutTag" ];then
-								[ -e $Dockerfile ] && rm -f $Dockerfile
-echo "
-FROM $BASE
-RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
-&& apt update \
-&& apt install -y curl
-WORKDIR /app
-COPY . .
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
-" > $Dockerfile
-								if [ -n "$PORT" ];then
-									echo EXPOSE $PORT >> $Dockerfile
-									echo HEALTHCHECK --interval=5s --timeout=2s --retries=12 CMD curl --silent --fail localhost:$PORT/health || exit 1
-									echo ENTRYPOINT ['"dotnet"', '"'$DLL'"', '"--urls"', '"'http://*:$PORT'"'] >> $Dockerfile
-								else
-									echo ENTRYPOINT ['"dotnet"', '"'$DLL'"'] >> $Dockerfile
-								fi
 								#clean image
 								if [ "$CLEAN" = 'true' ];then
 									existImages=`docker images | grep $dockerWithoutTag | awk '{print $3}'`
@@ -70,7 +52,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shangha
 									fi
 								fi
 								#build image
-								docker build -f ./$Dockerfile -t $dockerWithTag --pull=true publish
+								docker build -f $Dockerfile -t $dockerWithTag --pull=true publish
 								#push image
 								if [ "$PUSH" != 'false' ];then
 									docker push $dockerWithTag
