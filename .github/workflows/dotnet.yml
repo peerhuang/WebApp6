@@ -24,7 +24,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build WebApp6/WebApp6.csproj --no-restore -c:Release --output ./publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
+      run: dotnet build WebApp6/WebApp6.csproj --no-restore -c:Release --output ~/publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
@@ -43,7 +43,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v3 # docker build & push
       with:
-        context: ./publish
+        context: ~/publish
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
