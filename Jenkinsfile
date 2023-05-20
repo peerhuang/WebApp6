@@ -9,7 +9,9 @@ pipeline {
 		PROJECT = "WebApp6/WebApp6.csproj"
 		DLL = "WebApp6.dll"
 		DOCKERNAME = "peerhuang/webapp6"
-		PORT = "80"
+		BASE = "mcr.microsoft.com/dotnet/aspnet:6.0"
+		PORT = ""
+		DOCKERFILENAME = "Dockerfile"
 	}
     stages {
         stage('dotnet build') {
@@ -17,14 +19,12 @@ pipeline {
                 script {
 					if(isUnix()) {
                         sh '''
-							if [ "$CLEAN" = 'true' ];then
-								rm -rf publish
-							fi
-                            dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
+						[ "$CLEAN" = 'true' ] && rm -rf publish
+                        dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
                         '''
 					}else {
                         bat '''
-                            dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
+                        dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
                         '''
 					}
 				}
@@ -35,36 +35,51 @@ pipeline {
                 script {
 					if(isUnix()) {
                         sh '''
-							#!/bin/sh
-							dockerWithoutTag=$DOCKERNAME
-							Dockerfile='Dockerfile'
-							if [ -n "$DOCKERTAG" ];then
-								dockerWithTag=$dockerWithoutTag:$DOCKERTAG
-							else
-								dockerWithTag=$dockerWithoutTag:`date +%Y`
+						#!/bin/sh
+						dockerWithoutTag=$DOCKERNAME
+						[ -z "$BASE" ] && BASE="mcr.microsoft.com/dotnet/aspnet:6.0"
+						[ -z "$DOCKERFILENAME" ] && DOCKERFILENAME='Dockerfile'
+						[ -e "$DOCKERFILENAME" ] && DFName="$DOCKERFILENAME" || DFName='Dockerfile.auto'
+						if [ -n "$DOCKERTAG" ];then
+							dockerWithTag=$dockerWithoutTag:$DOCKERTAG
+						else
+							dockerWithTag=$dockerWithoutTag:`date +%Y`
+						fi
+                        if [ -n "$dockerWithoutTag" ];then
+							if [ "$DFName" != "$DOCKERFILENAME" ];then
+								[ -e $DFName ] && rm -f $DFName
+echo "
+FROM $BASE
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
+&& apt update \
+&& apt install -y curl
+WORKDIR /app
+COPY publish .
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+" > $DFName
+								if [ -n "$PORT" ];then
+									echo EXPOSE $PORT >> $DFName
+									echo HEALTHCHECK --interval=5s --timeout=2s --retries=12 CMD curl --silent --fail localhost:$PORT/health || exit 1
+									echo ENTRYPOINT ['"dotnet"', '"'$DLL'"', '"--urls"', '"'http://*:$PORT'"'] >> $DFName
+								else
+									echo ENTRYPOINT ['"dotnet"', '"'$DLL'"'] >> $DFName
+								fi
 							fi
-                            if [ -n "$dockerWithoutTag" ];then
-								#clean image
-								if [ "$CLEAN" = 'true' ];then
-									existImages=`docker images | grep $dockerWithoutTag | awk '{print $3}'`
-									if [ -n "$existImages" ];then
-										docker rmi -f $existImages
-									fi
-								fi
-								#build image
-								docker build -f $Dockerfile -t $dockerWithTag --pull=true .
-								#push image
-								if [ "$PUSH" != 'false' ];then
-									docker push $dockerWithTag
-								fi
-								if [ -z "$DOCKERTAG" ];then
-									#update latest
-									docker tag $dockerWithTag $dockerWithoutTag
-									if [ "$PUSH" != 'false' ];then
-										docker push $dockerWithoutTag
-									fi
-								fi
-                            fi
+							#clean image
+							if [ "$CLEAN" = 'true' ];then
+								existImages=`docker images | grep $dockerWithoutTag | awk '{print $3}'`
+								[ -n "$existImages" ] && docker rmi -f $existImages
+							fi
+							#build image
+							docker build -f ./$DFName -t $dockerWithTag --pull=true .
+							#push image
+							[ "$PUSH" != 'false' ] && docker push $dockerWithTag
+							if [ -z "$DOCKERTAG" ];then
+								#update latest
+								docker tag $dockerWithTag $dockerWithoutTag
+								[ "$PUSH" != 'false' ] && docker push $dockerWithoutTag
+							fi
+                        fi
                         '''
 					}
 				}
