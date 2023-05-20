@@ -24,7 +24,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
+      run: dotnet build WebApp6/WebApp6.csproj --no-restore -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
