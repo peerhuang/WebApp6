@@ -1,7 +1,7 @@
 ﻿<Project>
 	<PropertyGroup>
-		<TargetFrameworks>net6.0</TargetFrameworks>
-		<!--<OutputPath>$(MSBuildThisFileDirectory)publish\</OutputPath>-->
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<OutputPath>$(MSBuildThisFileDirectory)bin\</OutputPath>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 </Project>
