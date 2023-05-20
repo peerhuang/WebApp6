@@ -1,7 +1,7 @@
 ﻿<Project>
 	<PropertyGroup>
 		<TargetFrameworks>net6.0</TargetFrameworks>
-
+		<OutputPath>$(MSBuildThisFileDirectory)publish\</OutputPath>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 </Project>
