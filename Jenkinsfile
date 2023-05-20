@@ -14,17 +14,20 @@ pipeline {
 		PORT = ""
 	}
     stages {
-        stage('dotnet build') {
+        stage('build') {
             steps {
                 script {
 					if(isUnix()) {
                         sh '''
 						[ "$CLEAN" = 'true' ] && rm -rf publish
-                        dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
+						if [ -n "$DLL" ];then
+                        	dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
+						else
+						    yarn install && yarn build
+						fi
                         '''
 					}else {
                         bat '''
-                        dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
                         '''
 					}
 				}
