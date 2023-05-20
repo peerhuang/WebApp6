@@ -36,7 +36,7 @@ jobs:
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@v3  # 抽取项目信息，主要是镜像的tag
+      uses: docker/metadata-action@v4  # 抽取项目信息，主要是镜像的tag
       with:
         images: peerhuang/webapp6
 
