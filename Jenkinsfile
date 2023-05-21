@@ -44,11 +44,7 @@ pipeline {
 						[ -z "$BASE" ] && BASE="mcr.microsoft.com/dotnet/aspnet:6.0"
 						[ -z "$DOCKERFILENAME" ] && DOCKERFILENAME='Dockerfile'
 						[ -e "$DOCKERFILENAME" ] && DFName="$DOCKERFILENAME" || DFName='Dockerfile.auto'
-						if [ -n "$DOCKERTAG" ];then
-							dockerWithTag=$dockerWithoutTag:$DOCKERTAG
-						else
-							#dockerWithTag=$dockerWithoutTag:`date +%Y`
-						fi
+						[ -n "$DOCKERTAG" ] && dockerWithTag=$dockerWithoutTag:$DOCKERTAG
                         if [ -n "$dockerWithoutTag" ];then
 							if [ "$DFName" != "$DOCKERFILENAME" ];then
 								[ -e $DFName ] && rm -f $DFName
