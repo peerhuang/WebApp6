@@ -44,7 +44,7 @@ pipeline {
 						[ -z "$BASE" ] && BASE="mcr.microsoft.com/dotnet/aspnet:6.0"
 						[ -z "$DOCKERFILENAME" ] && DOCKERFILENAME='Dockerfile'
 						[ -e "$DOCKERFILENAME" ] && DFName="$DOCKERFILENAME" || DFName='Dockerfile.auto'
-						[ -n "$DOCKERTAG" ] && dockerWithTag=$dockerWithoutTag:$DOCKERTAG
+						[ -n "$DOCKERTAG" ] && dockerWithTag=$dockerWithoutTag:$DOCKERTAG || dockerWithTag=$dockerWithoutTag
                         if [ -n "$dockerWithoutTag" ];then
 							if [ "$DFName" != "$DOCKERFILENAME" ];then
 								[ -e $DFName ] && rm -f $DFName
@@ -74,7 +74,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shangha
 							docker build -f ./$DFName -t $dockerWithTag --pull=true .
 							#push image
 							[ "$PUSH" != 'false' ] && docker push $dockerWithTag
-							if [ -z "$DOCKERTAG" ];then
+							if [ "$dockerWithTag"!="$dockerWithoutTag" ];then
 								#update latest
 								docker tag $dockerWithTag $dockerWithoutTag
 								[ "$PUSH" != 'false' ] && docker push $dockerWithoutTag
