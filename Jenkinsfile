@@ -97,12 +97,4 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shangha
             }
         }
     }
-	post {
-        always {        
-        }
-        success {
-        }
-        failure{
-        }
-    }
 }
