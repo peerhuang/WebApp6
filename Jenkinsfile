@@ -3,7 +3,6 @@ pipeline {
 	parameters {
 		string(name: 'DOCKERTAG', defaultValue: '', description: '')
         booleanParam(name: 'PUSH', defaultValue: true, description: '')
-		booleanParam(name: 'CLEAN', defaultValue: false, description: '')
     }
 	environment {
 		DOCKERNAME = "peerhuang/webapp6"
@@ -17,14 +16,15 @@ pipeline {
         stage('build') {
             steps {
                 script {
-					if(isUnix()) {
+				    if(isUnix()) {
                         sh '''
-						[ -z "$CLEAN" ] && CLEAN='true'
+                        [ -z "$CLEAN" ] && CLEAN='true'
+                        [ -z "$PUSH" ] && PUSH='true'
 						[ "$CLEAN" = 'true' ] && rm -rf publish
 						if [ -n "$DLL" ];then
                         	dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
 						else
-						    yarn install && yarn build
+						    (yarn install && yarn build) || (npm install && npm build)
 						fi
                         '''
 					}else {
