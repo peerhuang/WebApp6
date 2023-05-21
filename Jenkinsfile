@@ -47,7 +47,8 @@ pipeline {
 						if [ -n "$DOCKERTAG" ];then
 							dockerWithTag=$dockerWithoutTag:$DOCKERTAG
 						else
-							dockerWithTag=$dockerWithoutTag:`date +%Y`
+							dockerWithTag=$dockerWithoutTag:$BRANCH_NAME
+							#dockerWithTag=$dockerWithoutTag:`date +%Y`
 						fi
                         if [ -n "$dockerWithoutTag" ];then
 							if [ "$DFName" != "$DOCKERFILENAME" ];then
