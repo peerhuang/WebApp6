@@ -20,8 +20,8 @@ pipeline {
 					if(isUnix()) {
                         sh '''
 						#!/bin/sh
-						[ -z "$CLEAN" ] && CLEAN='true'
-                        [ -z "$PUSH" ] && PUSH='true'
+						[ -z "$CLEAN" ] && export CLEAN='true'
+                        [ -z "$PUSH" ] && export PUSH='true'
 						'''
 					}
 				}
