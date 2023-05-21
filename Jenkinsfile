@@ -15,7 +15,6 @@ pipeline {
     stages {
 		stage('build project') {
             steps {
-                echo 'build project'
 				script {
 					if(isUnix()) {
                         sh '''
