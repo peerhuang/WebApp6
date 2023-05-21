@@ -13,20 +13,6 @@ pipeline {
 		PORT = ""
 	}
     stages {
-		stage('set up') {
-            steps {
-                echo 'set up'
-				script {
-					if(isUnix()) {
-                        sh '''
-						#!/bin/sh
-						[ -z "$CLEAN" ] && export CLEAN='true'
-                        #[ -z "$PUSH" ] && export PUSH='true'
-						'''
-					}
-				}
-            }
-        }
 		stage('build project') {
             steps {
                 echo 'build project'
@@ -34,6 +20,7 @@ pipeline {
 					if(isUnix()) {
                         sh '''
 						#!/bin/sh
+						[ -z "$CLEAN" ] && CLEAN='true'
 						[ "$CLEAN" = 'true' ] && rm -rf publish
 						if [ -n "$DLL" ];then
                         	dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
@@ -51,6 +38,8 @@ pipeline {
 					if(isUnix()) {
                         sh '''
 						#!/bin/sh
+						[ -z "$CLEAN" ] && CLEAN='true'
+						[ -z "$PUSH" ] && PUSH='true'
 						dockerWithoutTag=$DOCKERNAME
 						[ -z "$BASE" ] && BASE="mcr.microsoft.com/dotnet/aspnet:6.0"
 						[ -z "$DOCKERFILENAME" ] && DOCKERFILENAME='Dockerfile'
