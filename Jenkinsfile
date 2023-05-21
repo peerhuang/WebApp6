@@ -13,20 +13,44 @@ pipeline {
 		PORT = ""
 	}
     stages {
-		stage('build docker') {
+		stage('set up') {
             steps {
-                script {
+                echo 'set up'
+				script {
 					if(isUnix()) {
                         sh '''
 						#!/bin/sh
 						[ -z "$CLEAN" ] && CLEAN='true'
                         [ -z "$PUSH" ] && PUSH='true'
+						'''
+					}
+				}
+            }
+        }
+		stage('build project') {
+            steps {
+                echo 'build project'
+				script {
+					if(isUnix()) {
+                        sh '''
+						#!/bin/sh
 						[ "$CLEAN" = 'true' ] && rm -rf publish
 						if [ -n "$DLL" ];then
                         	dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
 						else
 						    (yarn install && yarn build) || (npm install && npm build)
 						fi
+						'''
+					}
+				}
+            }
+        }
+		stage('build docker') {
+            steps {
+                script {
+					if(isUnix()) {
+                        sh '''
+						#!/bin/sh
 						dockerWithoutTag=$DOCKERNAME
 						[ -z "$BASE" ] && BASE="mcr.microsoft.com/dotnet/aspnet:6.0"
 						[ -z "$DOCKERFILENAME" ] && DOCKERFILENAME='Dockerfile'
@@ -71,6 +95,14 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shangha
 					}
 				}
             }
+        }
+    }
+	post {
+        always {        
+        }
+        success {
+        }
+        failure{
         }
     }
 }
