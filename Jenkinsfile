@@ -19,6 +19,7 @@ pipeline {
                 script {
 					if(isUnix()) {
                         sh '''
+						[ -z "$CLEAN" ] && CLEAN='true'
 						[ "$CLEAN" = 'true' ] && rm -rf publish
 						if [ -n "$DLL" ];then
                         	dotnet publish $PROJECT -c:Release --output publish --self-contained false /p:DebugType=None /p:DebugSymbols=false
