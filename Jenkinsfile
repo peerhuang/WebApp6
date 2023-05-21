@@ -13,12 +13,13 @@ pipeline {
 		PORT = ""
 	}
     stages {
-        stage('build') {
+		stage('build docker') {
             steps {
                 script {
-				    if(isUnix()) {
+					if(isUnix()) {
                         sh '''
-                        [ -z "$CLEAN" ] && CLEAN='true'
+						#!/bin/sh
+						[ -z "$CLEAN" ] && CLEAN='true'
                         [ -z "$PUSH" ] && PUSH='true'
 						[ "$CLEAN" = 'true' ] && rm -rf publish
 						if [ -n "$DLL" ];then
@@ -26,20 +27,6 @@ pipeline {
 						else
 						    (yarn install && yarn build) || (npm install && npm build)
 						fi
-                        '''
-					}else {
-                        bat '''
-                        '''
-					}
-				}
-            }
-        }
-		stage('build docker') {
-            steps {
-                script {
-					if(isUnix()) {
-                        sh '''
-						#!/bin/sh
 						dockerWithoutTag=$DOCKERNAME
 						[ -z "$BASE" ] && BASE="mcr.microsoft.com/dotnet/aspnet:6.0"
 						[ -z "$DOCKERFILENAME" ] && DOCKERFILENAME='Dockerfile'
