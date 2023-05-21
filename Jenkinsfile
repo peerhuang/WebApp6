@@ -21,7 +21,7 @@ pipeline {
                         sh '''
 						#!/bin/sh
 						[ -z "$CLEAN" ] && export CLEAN='true'
-                        [ -z "$PUSH" ] && export PUSH='true'
+                        #[ -z "$PUSH" ] && export PUSH='true'
 						'''
 					}
 				}
