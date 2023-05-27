@@ -12,8 +12,8 @@ namespace WebApp6.Grpc
             {
                 case "sayhi":
                     var response = new InvokeResponse();
-                    var input = ProtobufHelper.Deserialize<HelloRequest>(request.Data.Value);
-                    response.Data.Value = ProtobufHelper.Serialize(new HelloReply { Message = "ok" });
+                    //var input = ProtobufHelper.Deserialize<HelloRequest>(request.Data.Value);
+                    //response.Data.Value = ProtobufHelper.Serialize(new HelloReply { Message = "ok" });
                     return response;
 
                 default:
