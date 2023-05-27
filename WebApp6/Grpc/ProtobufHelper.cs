@@ -27,13 +27,13 @@ namespace WebApp6.Grpc
             return hello;
         }
 
-        public static T UnpackHello<T>(this Any any)
+        public static T UnpackHello<T>(Any any)
         {
             var hello = any.Unpack<Hello>();
             return Deserialize<T>(hello.Value);
         }
 
-        public static Any PackHello<T>(this Any any, T value)
+        public static Any PackHello<T>(T value)
         {
             using var mem = new MemoryStream();
             Serializer.Serialize(mem, value);
