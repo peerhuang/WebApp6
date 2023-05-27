@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Grpc\protobuf.proto" />
+    <None Remove="Grpc\Hello.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Grpc\protobuf.proto" />
+    <Protobuf Include="Grpc\Hello.proto" />
   </ItemGroup>
 
 </Project>
