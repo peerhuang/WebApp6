@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-option csharp_namespace = "Dapr.Grpc";
-
-message Hello {
-  bytes Value = 1;
-}
