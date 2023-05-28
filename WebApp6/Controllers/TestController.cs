@@ -10,7 +10,7 @@ namespace WebApp6.Controllers
     {
         private readonly ILogger<TestController> _logger;
 
-        public TestController(ILogger<TestController> logger, IDiagnosticContext diagnosticContext)
+        public TestController(ILogger<TestController> logger)
         {
             _logger = logger;
         }
