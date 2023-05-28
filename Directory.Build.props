@@ -1,7 +1,7 @@
 ﻿<Project>
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<OutputPath>$(MSBuildThisFileDirectory)bin\</OutputPath>
+		<!--<OutputPath>$(MSBuildThisFileDirectory)bin\</OutputPath>-->
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 </Project>
