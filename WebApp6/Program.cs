@@ -12,10 +12,10 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Debug).WriteTo.Async(c => c.File("Logs/Debug/logs.txt", rollingInterval: RollingInterval.Day)))
     .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Error).WriteTo.Async(c => c.File("Logs/Error/logs.txt", rollingInterval: RollingInterval.Day)))
     .WriteTo.Logger(lg => lg.Filter.ByIncludingOnly(p => p.Level == LogEventLevel.Information).WriteTo.Async(c => c.File("Logs/Information/logs.txt", rollingInterval: RollingInterval.Day)))
-    .WriteTo.Console(LogEventLevel.Error)
+    .WriteTo.Console()
     .ReadFrom.Configuration(config)
     .CreateLogger();
-
+Log.Information("Starting web application");
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 // Add services to the container.
@@ -26,7 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
